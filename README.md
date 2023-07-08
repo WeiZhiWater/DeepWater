@@ -5,7 +5,7 @@ The ***DeepWater*** is a flexible, scalable, and explainable deep learning (DL) 
 
 By leveraging the power of big data and deep learning, the ***DeepWater*** aims to improve our ability to better model and understand water quality for decadal trends, seasonal patterns, and daily variations under diverse and changing hydro-climate conditions. 
 
-
+--------------------------------------------------------
 ### Model features
 The model is developed based on *HydroDL* (a hydrology DL model) to focus on water quality with expanding capacities of 
 * handling sparse data and large data gaps
