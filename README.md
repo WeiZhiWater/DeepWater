@@ -14,7 +14,7 @@ The model is developed based on *HydroDL* (a hydrology DL model) to focus on wat
 * multi-task prediction (e.g., concentration and flux of multiple solutes)
 * model interpretability for input importance
 
-***DeepWater*** (静水流深)，正如古谚语所描述的一样，利用深度学习技术挖掘水质数据中潜藏的深层信息，深入理解水质变化的本质。
+***DeepWater*** (静水流深)，正如古谚语所描述的一样，利用深度学习技术挖掘水质数据中潜藏的深层信息，深入理解水质变化的本质和规律。
 
 Note: the Chinese phrase "静水流深" translates to "still waters run deep," suggesting that the elegant DL model, like calm and quiet surface waters, may possess profound intelligence and depth beyond its outward demeanor.
 
