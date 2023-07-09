@@ -1,5 +1,5 @@
 # DeepWater: deep learning for water quality 
-<img src="logo/DeepWater_logo2.png" alt="Logo" align="right" height="200" />
+<img src="logo/DeepWater_logo2.png" alt="Logo" align="right" height="180" />
 
 The **DeepWater** is a flexible, scalable, and explainable deep learning (DL) model to predict riverine water quality. The model is designed to predict spatio-temporal dynamics of water quality at the large scale (e.g., hundreds of rivers) for decades. 
 
