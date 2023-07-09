@@ -11,7 +11,7 @@ The model is developed based on *HydroDL* (a hydrology DL model) to focus on wat
 * handling sparse water quality data and large data gaps
 * flexible splitting scheme (e.g., based on the data distribution of each basin)
 * multi-task prediction (e.g., concentration and flux of multiple solutes)
-* model interpretability for input importance
+* model interpretability for input importance（in development）
 
 ## Model philosophy
 **DeepWater** (静水流深)，正如古谚语所描述的一样，利用深度学习技术挖掘水质数据中潜藏的深层信息，深入理解水质变化的本质和规律。
