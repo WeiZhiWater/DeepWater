@@ -9,8 +9,8 @@ By leveraging the power of big data and deep learning, the ***DeepWater*** aims 
 
 ## Model features
 The model is developed based on *HydroDL* (a hydrology DL model) to focus on water quality with expanding capacities: 
-* handling sparse data and large data gaps
-* flexible splitting schemes (e.g., based on the data distribution of each basin)
+* handling sparse water quality data and large data gaps
+* flexible splitting scheme (e.g., based on the data distribution of each basin)
 * multi-task prediction (e.g., concentration and flux of multiple solutes)
 * model interpretability for input importance
 
