@@ -18,7 +18,5 @@ The model is developed based on HydroDL (a hydrology DL model) to focus on water
 
 Note: the Chinese phrase "静水流深" translates to "still waters run deep", conveying an idea that the elegant DL model, with hidden depth and profound intelligence, could see through the calm and quiet surface water to reveal its underlying dynamics and fundamental principles.
 
-
-## Example
-
 ## Reference
+- Zhi, W., Ouyang, W., Shen, C., & Li, L. (2023). Temperature outweighs light and flow as the predominant driver of dissolved oxygen in US rivers. *Nature Water*, 1(3), 249-260.
