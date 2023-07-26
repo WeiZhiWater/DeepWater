@@ -1,0 +1,24 @@
+#The PBS directives
+##############################
+#PBS -N example_r40
+#PBS -A lxl35_f_g_gc_default  
+#PBS -M wxz132@psu.edu
+#PBS -m a
+#PBS -l nodes=1:ppn=1:gpus=1
+#PBS -l pmem=10gb
+#PBS -l walltime=7:00:00
+
+cd /gpfs/scratch/wxz132/gages2work_bk20230715/newHydroDL-split-weights/NCCrev_DO_20230425/
+
+echo " "
+echo "Job started on 'hostname' at 'date' "
+echo " "
+
+module purge
+module load anaconda3
+source activate hydro_dapeng
+python example_r40.py
+echo " "
+echo "Job ended at 'date'"
+echo " "
+
