@@ -19,4 +19,6 @@ The model is developed based on HydroDL (a hydrology DL model) to focus on water
 Note: the Chinese phrase "静水流深" translates to "still waters run deep", conveying an idea that the elegant DL model, with hidden depth and profound intelligence, could see through the calm and quiet surface water to reveal its underlying dynamics and fundamental principles.
 
 ## Reference
+- Zhi, W., Klingler, C., Liu, J., & Li, L. (2023). Widespread deoxygenation in warming rivers. *Nature Climate Change*, 1-9.
 - Zhi, W., Ouyang, W., Shen, C., & Li, L. (2023). Temperature outweighs light and flow as the predominant driver of dissolved oxygen in US rivers. *Nature Water*, 1(3), 249-260.
+- Zhi, W., Feng, D., Tsai, W. P., Sterle, G., Harpold, A., Shen, C., & Li, L. (2021). From hydrometeorology to river water quality: can a deep learning model predict dissolved oxygen at the continental scale? *Environmental Science & Technology*, 55(4), 2357-2368.
