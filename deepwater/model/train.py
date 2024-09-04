@@ -326,7 +326,7 @@ def testModel(model, x, c, *, outdir='output', outname='model', batchSize=None, 
 
     # forward for each batch
     for i in range(0, len(iS)):
-        print('batch {}'.format(i))
+        # print('batch {}'.format(i))
         xTemp = x[iS[i]:iE[i], :, :]
         if c is not None:
             cTemp = np.repeat(
