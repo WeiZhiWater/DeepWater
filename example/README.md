@@ -33,7 +33,11 @@ It will use data from `chem_input/example_r40` to train an LSTM model for 100 ep
 
 ### 2. Explain the model to interpret feature importance
 
-Run 
+To explain the model, install the additional `captum` package.
+
+```bash
+conda install captum==0.7.0
+```
 
 ```bash
 python explain_r40.py
