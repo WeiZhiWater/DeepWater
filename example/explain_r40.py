@@ -13,12 +13,14 @@ by the Free Software Foundation.
 
 For contact: weizhi7367@gmail.com
 """
-
+#%%
 import os
+# os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:512"
 import sys
 import random
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 import torch
 
 import warnings
@@ -136,9 +138,37 @@ print(f'Prediction output for a single observation is of shape: {preds.shape}')
 
 
 # ---------------------------------- explain model --------------------------------
+#%%
+last_year = (13879, 13900) # 14244
+y_index = 0 # 0 = DO,  1 = Qnorm  , 2 = WT
 
-explanation = deepwater.explain.LocalExplanation(model, X, method="integrated_gradients")
+# local explanation for a single river
+river = X[[0]]
+local_explanation = deepwater.explain.LocalExplanation(model, data=X, method="shap_deeplift")
+local_explanation.explain(river, target=y_index, time=last_year)
 
-last_year = (13879, 14244)
+# feature attributions in an array
+print(local_explanation.result.shape)
 
-explanation.explain(X[[0]], target=0, time=last_year)
+# plot feature attributions in time (for a single river)
+local_explanation.plot_line(max_features=5, rolling=14)
+plt.show()
+
+# plot local feature importance (aggregated over time)
+local_explanation.plot_bar(max_features=15)
+plt.show()
+
+#%%
+# global explanation for a set of rivers
+rivers = X[0:10]
+global_explanation = deepwater.explain.GlobalExplanation(model, data=X, method="integrated_gradients")
+global_explanation.explain(rivers, target=y_index, time=last_year)
+
+# feature attributions in an array
+print(global_explanation.result.shape)
+
+# plot global feature importance in time (aggregated over rivers)
+global_explanation.plot_line()
+
+# plot global feature importance (aggregated over rivers and time)
+global_explanation.plot_bar()
