@@ -39,6 +39,10 @@ To explain the model, install the additional `captum` package.
 conda install captum==0.7.0
 ```
 
+Run the following command:
+
 ```bash
 python explain_r40.py
 ```
+
+It will use data from `chem_input/example_r40` to explain the model from `output/example_r40`. 

@@ -6,7 +6,7 @@ This script is designed to test the explanation of the deep learning model for
 riverine water quality.
 
 For demonstration purposes, it includes an LSTM trained on data of dissolved oxygen, water temperature, 
-and discharge, from only 40 US rivers, allowing for CPU-based training.
+and discharge, from only 40 US rivers. We speed up the computation using a GPU.
 
 DeepWater is open-source software, licensed under the GNU Lesser General Public License as published
 by the Free Software Foundation.
@@ -15,14 +15,12 @@ For contact: weizhi7367@gmail.com
 """
 #%%
 import os
-# os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:512"
 import sys
 import random
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import torch
-
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
 
@@ -65,16 +63,6 @@ if torch.cuda.is_available():
 
 
 # ----------------------------------- load data -----------------------------------
-# variables:
-#   x: forcing              format: x[nb, nt, nx]
-#   c: constant attributes  format: c[nb, nc]
-
-# dimensions:
-#   nb: number of basins
-#   nt: number of time steps
-#   nx: number of time-dependent forcing variables
-#   nc: number of constant attributes
-
 # initialize chemical data
 chem_site = 40
 chem_date = pd.date_range('1981-01-01', '2019-12-31')
@@ -125,7 +113,7 @@ print(f'Loaded data of shape: {X.shape}')
 
 
 # ----------------------------------- load model ----------------------------------
-
+# output from the `example_r40.py` file
 model = deepwater.model.train.loadModel(dir_output, epoch="100").to(GPUid).double()
 
 print(f'Loaded model of class: {type(model)}')
@@ -138,37 +126,49 @@ print(f'Prediction output for a single observation is of shape: {preds.shape}')
 
 
 # ---------------------------------- explain model --------------------------------
-#%%
-last_year = (13879, 13900) # 14244
-y_index = 0 # 0 = DO,  1 = Qnorm  , 2 = WT
+
+last_year = (13879, 14244)
+y_index = 0 # 0 = DO,  1 = Qnorm, 2 = WT
+
 
 # local explanation for a single river
-river = X[[0]]
+river = X[[5]]
 local_explanation = deepwater.explain.LocalExplanation(model, data=X, method="shap_deeplift")
-local_explanation.explain(river, target=y_index, time=last_year)
+set_seeds(random_seed)
+local_explanation.explain(river, time=last_year, target=y_index)
 
 # feature attributions in an array
-print(local_explanation.result.shape)
+print(f'Local explanation for a single observation is of shape: {local_explanation.result.shape}')
 
 # plot feature attributions in time (for a single river)
 local_explanation.plot_line(max_features=5, rolling=14)
-plt.show()
+plt.tight_layout()
+plt.savefig(os.path.join(dir_output, 'local_explanation_plot_line.png'))
+plt.clf()
 
 # plot local feature importance (aggregated over time)
 local_explanation.plot_bar(max_features=15)
-plt.show()
+plt.tight_layout()
+plt.savefig(os.path.join(dir_output, 'local_explanation_plot_bar.png'))
+plt.clf()
 
-#%%
 # global explanation for a set of rivers
 rivers = X[0:10]
 global_explanation = deepwater.explain.GlobalExplanation(model, data=X, method="integrated_gradients")
-global_explanation.explain(rivers, target=y_index, time=last_year)
+set_seeds(random_seed)
+global_explanation.explain(rivers, time=last_year, target=y_index, batch_size=2)
 
 # feature attributions in an array
-print(global_explanation.result.shape)
+print(f'Global explanation for a set of observations is of shape: {global_explanation.result.shape}')
 
 # plot global feature importance in time (aggregated over rivers)
-global_explanation.plot_line()
+global_explanation.plot_line(max_features=5, rolling=7)
+plt.tight_layout()
+plt.savefig(os.path.join(dir_output, 'global_explanation_plot_line.png'))
+plt.clf()
 
 # plot global feature importance (aggregated over rivers and time)
-global_explanation.plot_bar()
+global_explanation.plot_bar(max_features=15)
+plt.tight_layout()
+plt.savefig(os.path.join(dir_output, 'global_explanation_plot_bar.png'))
+plt.clf()
