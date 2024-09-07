@@ -1,8 +1,9 @@
 import math
 import torch
 import torch.nn as nn
-from torch.nn import Parameter
 import torch.nn.functional as F
+from torch.nn import Parameter
+from torch.backends.cudnn.rnn import get_cudnn_mode
 from .dropout import DropMask, createMask
 from . import cnn
 import csv
@@ -297,7 +298,7 @@ class CudnnLstm(torch.nn.Module):
                 1, batchSize, self.hiddenSize, requires_grad=False)
 
         # cuDNN backend - disabled flat weight
-        handle = torch.backends.cudnn.get_handle()
+        # handle = torch.backends.cudnn.get_handle()
         if doDrop is True:
             self.reset_mask()
             weight = [
@@ -307,10 +308,10 @@ class CudnnLstm(torch.nn.Module):
             ]
         else:
             weight = [self.w_ih, self.w_hh, self.b_ih, self.b_hh]
-
+        
         output, hy, cy, reserve, new_weight_buf = torch._cudnn_rnn(
-            input, weight, 4, None, hx, cx, torch.backends.cudnn.CUDNN_LSTM,
-            self.hiddenSize, 1, False, 0, self.training, False, (), None)
+            input, weight, 4, None, hx, cx, get_cudnn_mode("LSTM"),
+            self.hiddenSize, 0, 1, False, 0, self.training, False, (), None)
         return output, (hy, cy)
 
     @property
