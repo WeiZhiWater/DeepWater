@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from tqdm import tqdm
-from captum.attr import IntegratedGradients, DeepLiftShap
+from captum.attr import IntegratedGradients, DeepLiftShap, Saliency
 
 
 
@@ -18,7 +18,9 @@ class LocalExplanation:
     data : np.ndarray (3d)
         Dataset modeling data distribution used to compute the explanation.
     method : str
-        Either 'integrated_gradients' or 'shap_deeplift'.
+        One of {'integrated_gradients', 'shap_deeplift', 'saliency'}.
+    **kwargs
+            Hyperparameters passed to the explanation class. 
 
     Attributes
     ----------
@@ -29,18 +31,19 @@ class LocalExplanation:
     
     """
 
-    def __init__(self, model, data, method="integrated_gradients"):
+    def __init__(self, model, data, method="integrated_gradients", **kwargs):
         self._model = model
         self._data = data
         self._method = method
         if method == "integrated_gradients":
-            self.explanation = IntegratedGradients(model)
-            self._baselines = 0
+            self.explanation = IntegratedGradients(model, **kwargs)
         elif method == "shap_deeplift":
-            self.explanation = DeepLiftShap(model)
-            self._baselines = self._data
+            self.explanation = DeepLiftShap(model, **kwargs)
+        elif method == "saliency":
+            self.explanation = Saliency(model, **kwargs)
         else:
-            raise TypeError("`method` has to be one of {'integrated_gradients', 'shap_deeplift'}")
+            raise TypeError("`method` has to be one of\
+                            {'integrated_gradients', 'shap_deeplift', 'saliency'}")
         self.result = None
 
 
@@ -62,12 +65,19 @@ class LocalExplanation:
         _attr_t = torch.Tensor()
         for _idt in tqdm(range(time[0], time[1])):
             with torch.no_grad():
-                _attr = self.explanation.attribute(
-                    x, 
-                    target=(_idt, target), 
-                    baselines=self._baselines,
-                    **kwargs
-                )
+                if self._method == "shap_deeplift" and "baselines" not in kwargs:
+                    _attr = self.explanation.attribute(
+                        x, 
+                        target=(_idt, target), 
+                        baselines=self._data,
+                        **kwargs
+                    )
+                else:
+                    _attr = self.explanation.attribute(
+                        x, 
+                        target=(_idt, target), 
+                        **kwargs
+                    )
                 _attr_t = torch.cat((_attr_t, _attr[:, _idt].unsqueeze(1).to('cpu')), 1)
             del _attr
             gc.collect()
@@ -138,7 +148,9 @@ class GlobalExplanation:
     data : np.ndarray (3d)
         Dataset modeling data distribution used to compute the explanation.
     method : str
-        Either 'integrated_gradients' or 'shap_deeplift',
+        One of {'integrated_gradients', 'shap_deeplift', 'saliency'}.
+    **kwargs
+            Hyperparameters passed to the explanation class. 
 
     Attributes
     ----------
@@ -149,18 +161,19 @@ class GlobalExplanation:
     
     """
 
-    def __init__(self, model, data, method="integrated_gradients"):
+    def __init__(self, model, data, method="integrated_gradients", **kwargs):
         self._model = model
         self._data = data
         self._method = method
         if method == "integrated_gradients":
-            self.explanation = IntegratedGradients(model)
-            self._baselines = 0
+            self.explanation = IntegratedGradients(model, **kwargs)
         elif method == "shap_deeplift":
-            self.explanation = DeepLiftShap(model)
-            self._baselines = self._data
+            self.explanation = DeepLiftShap(model, **kwargs)
+        elif method == "saliency":
+            self.explanation = Saliency(model, **kwargs)
         else:
-            raise TypeError("`method` has to be one of {'integrated_gradients', 'shap_deeplift'}")
+            raise TypeError("`method` has to be one of\
+                            {'integrated_gradients', 'shap_deeplift', 'saliency'}")
         self.result = None
 
 
@@ -189,12 +202,19 @@ class GlobalExplanation:
             _attr_t = torch.Tensor()
             for _idt in range(time[0], time[1]):
                 with torch.no_grad():
-                    _attr = self.explanation.attribute(
-                        X[(_idx * batch_size):((_idx+1) * batch_size)], 
-                        target=(_idt, target), 
-                        baselines=self._baselines,
-                        **kwargs
-                    )
+                    if self._method == "shap_deeplift" and "baselines" not in kwargs:
+                        _attr = self.explanation.attribute(
+                            X[(_idx * batch_size):((_idx+1) * batch_size)], 
+                            target=(_idt, target), 
+                            baselines=self._data,
+                            **kwargs
+                        )
+                    else:
+                        _attr = self.explanation.attribute(
+                            X[(_idx * batch_size):((_idx+1) * batch_size)], 
+                            target=(_idt, target), 
+                            **kwargs
+                        )  
                     _attr_t = torch.cat((_attr_t, _attr[:, _idt].unsqueeze(1).to('cpu')), 1)
                 del _attr
                 gc.collect()

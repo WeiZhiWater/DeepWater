@@ -13,7 +13,7 @@ by the Free Software Foundation.
 
 For contact: weizhi7367@gmail.com
 """
-#%%
+
 import os
 import sys
 import random
@@ -131,7 +131,7 @@ last_year = (13879, 14244)
 y_index = 0 # 0 = DO,  1 = Qnorm, 2 = WT
 
 
-# local explanation for a single river
+# -- local explanation for a single river
 river = X[[5]]
 local_explanation = deepwater.explain.LocalExplanation(model, data=X, method="shap_deeplift")
 set_seeds(random_seed)
@@ -152,7 +152,8 @@ plt.tight_layout()
 plt.savefig(os.path.join(dir_output, 'local_explanation_plot_bar.png'))
 plt.clf()
 
-# global explanation for a set of rivers
+
+# -- global explanation for a set of rivers
 rivers = X[0:10]
 global_explanation = deepwater.explain.GlobalExplanation(model, data=X, method="integrated_gradients")
 set_seeds(random_seed)
@@ -171,4 +172,22 @@ plt.clf()
 global_explanation.plot_bar(max_features=15)
 plt.tight_layout()
 plt.savefig(os.path.join(dir_output, 'global_explanation_plot_bar.png'))
+plt.clf()
+
+
+# -- estimate explanations with another algorithm
+local_explanation_saliency = deepwater.explain.LocalExplanation(model, data=X, method="saliency")
+set_seeds(random_seed)
+local_explanation_saliency.explain(river, time=last_year, target=y_index)
+local_explanation_saliency.plot_bar(max_features=15)
+plt.tight_layout()
+plt.savefig(os.path.join(dir_output, 'local_explanation_saliency_plot_bar.png'))
+plt.clf()
+
+global_explanation_saliency = deepwater.explain.GlobalExplanation(model, data=X, method="saliency")
+set_seeds(random_seed)
+global_explanation_saliency.explain(rivers, time=last_year, target=y_index, batch_size=2)
+global_explanation_saliency.plot_bar(max_features=15)
+plt.tight_layout()
+plt.savefig(os.path.join(dir_output, 'global_explanation_saliency_plot_bar.png'))
 plt.clf()
