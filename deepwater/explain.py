@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from tqdm import tqdm
-from captum.attr import IntegratedGradients, DeepLiftShap, Saliency, Lime
+from captum.attr import IntegratedGradients, DeepLiftShap, Saliency
 
 
 
@@ -18,7 +18,7 @@ class LocalExplanation:
     data : np.ndarray (3d)
         Dataset modeling data distribution used to compute the explanation.
     method : str
-        One of {'integrated_gradients', 'shap_deeplift', 'saliency', 'lime'}.
+        One of {'integrated_gradients', 'shap_deeplift', 'saliency'}.
     **kwargs
             Hyperparameters passed to the explanation class. 
 
@@ -41,11 +41,9 @@ class LocalExplanation:
             self.explanation = DeepLiftShap(model, **kwargs)
         elif method == "saliency":
             self.explanation = Saliency(model, **kwargs)
-        elif method == "lime":
-            self.explanation = Lime(model, **kwargs)
         else:
             raise TypeError("`method` has to be one of\
-                            {'integrated_gradients', 'shap_deeplift', 'saliency', 'lime'}")
+                            {'integrated_gradients', 'shap_deeplift', 'saliency'}")
         self.result = None
 
 
@@ -150,7 +148,7 @@ class GlobalExplanation:
     data : np.ndarray (3d)
         Dataset modeling data distribution used to compute the explanation.
     method : str
-        One of {'integrated_gradients', 'shap_deeplift', 'saliency', 'lime'}.
+        One of {'integrated_gradients', 'shap_deeplift', 'saliency'}.
     **kwargs
             Hyperparameters passed to the explanation class. 
 
@@ -173,11 +171,9 @@ class GlobalExplanation:
             self.explanation = DeepLiftShap(model, **kwargs)
         elif method == "saliency":
             self.explanation = Saliency(model, **kwargs)
-        elif method == "lime":
-            self.explanation = Lime(model, **kwargs)
         else:
             raise TypeError("`method` has to be one of\
-                            {'integrated_gradients', 'shap_deeplift', 'saliency', 'lime'}")
+                            {'integrated_gradients', 'shap_deeplift', 'saliency'}")
         self.result = None
 
 
