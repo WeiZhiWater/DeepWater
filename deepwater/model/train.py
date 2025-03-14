@@ -126,7 +126,7 @@ def trainModel_printLoss(model,
         # save training model
         if saveFolder is not None:
             if iEpoch % saveEpoch == 0:
-                modelFile = os.path.join(saveFolder, 'model_Ep' + str(iEpoch) + '.pt')
+                modelFile = os.path.join(saveFolder, 'model_ep' + str(iEpoch) + '.pt')
                 torch.save(model, modelFile)
 
         # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -182,8 +182,7 @@ def trainModel(model,
                nEpoch=500,
                miniBatch=[100, 30],
                saveEpoch=100,
-               saveFolder=None,
-               mode='seq2seq'):
+               saveFolder=None):
     batchSize, rho = miniBatch
     # x- input; z - additional input; y - target; c - constant input
     if type(x) is tuple or type(x) is list:
@@ -269,7 +268,7 @@ def trainModel(model,
             if iEpoch % saveEpoch == 0:
                 # save model
                 modelFile = os.path.join(saveFolder,
-                                         'model_Ep' + str(iEpoch) + '.pt')
+                                         'model_ep' + str(iEpoch) + '.pt')
                 torch.save(model, modelFile)
     if saveFolder is not None:
         rf.close()
@@ -277,13 +276,13 @@ def trainModel(model,
 
 
 def saveModel(outFolder, model, epoch, modelName='model'):
-    modelFile = os.path.join(outFolder, modelName + '_Ep' + str(epoch) + '.pt')
+    modelFile = os.path.join(outFolder, modelName + '_ep' + str(epoch) + '.pt')
     torch.save(model, modelFile)
 
 
 def loadModel(outFolder, epoch, modelName='model'):
-    modelFile = os.path.join(outFolder, modelName + '_Ep' + str(epoch) + '.pt')
-    model = torch.load(modelFile)
+    modelFile = os.path.join(outFolder, modelName + '_ep' + str(epoch) + '.pt')
+    model = torch.load(modelFile, weights_only=False)
     return model
 
 
@@ -316,7 +315,7 @@ def testModel(model, x, c, *, outdir='output', outname='model', batchSize=None, 
 
     # save model output
     if filePathLst is None:
-        filePathLst = [outdir + '/out_Ep' + outname + '_y' + str(x+1) for x in range(ny)]    # Wei ZHi, 2021-09-06
+        filePathLst = [outdir + '/out_ep' + outname + '_y' + str(x+1) + '.csv' for x in range(ny)]    # Wei ZHi, 2021-09-06
     fLst = list()
     for filePath in filePathLst:
         if os.path.exists(filePath):
